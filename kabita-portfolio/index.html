@@ -3,650 +3,926 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kabita Phuyal | Mental Health Nurse</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+  <title>Kabita Phuyal — Mental Health Nurse</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --nhs-blue: #003087;
-      --nhs-dark: #00205b;
-      --nhs-light: #41B6E6;
-      --nhs-green: #009639;
-      --nhs-warm: #330072;
-      --white: #ffffff;
-      --gray-100: #f8f9fa;
-      --gray-200: #e9ecef;
-      --gray-600: #6c757d;
-      --gray-800: #343a40;
+      --bg:        #04080f;
+      --bg2:       #070d17;
+      --surface:   rgba(255,255,255,0.03);
+      --border:    rgba(255,255,255,0.07);
+      --border-hi: rgba(65,182,230,0.18);
+      --blue:      #003087;
+      --sky:       #41B6E6;
+      --sky-dim:   rgba(65,182,230,0.12);
+      --green:     #009639;
+      --white:     #f0f4f8;
+      --muted:     rgba(240,244,248,0.45);
+      --faint:     rgba(240,244,248,0.18);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #050d1a;
+      background: var(--bg);
       color: var(--white);
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ── Particles Canvas ── */
-    #particles-canvas {
+    /* ─── Noise texture overlay ─── */
+    body::before {
+      content: '';
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.022;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── Ambient light blobs ─── */
+    .ambient {
+      position: fixed;
       pointer-events: none;
       z-index: 0;
+      border-radius: 50%;
+      filter: blur(120px);
     }
+    .a1 { width: 600px; height: 600px; background: rgba(0,48,135,0.22); top: -100px; left: -100px; }
+    .a2 { width: 400px; height: 400px; background: rgba(65,182,230,0.08); top: 200px; right: -100px; }
+    .a3 { width: 500px; height: 500px; background: rgba(0,150,57,0.06); bottom: 0; left: 30%; }
 
-    /* ── Nav ── */
+    /* ─── Navigation ─── */
     nav {
       position: fixed;
-      top: 0; width: 100%;
-      z-index: 1000;
-      padding: 1rem 2rem;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 3rem;
+      height: 64px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      background: rgba(0, 32, 91, 0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(65, 182, 230, 0.2);
-      transition: all 0.3s ease;
+      justify-content: space-between;
+    }
+
+    nav::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(4,8,15,0.7);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--border);
     }
 
     .nav-logo {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--nhs-light);
-      letter-spacing: -0.5px;
+      position: relative;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: 0.5px;
     }
 
-    .nav-logo span { color: var(--white); }
+    .nav-logo em {
+      font-style: normal;
+      color: var(--sky);
+    }
 
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links {
+      position: relative;
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
 
     .nav-links a {
-      color: rgba(255,255,255,0.8);
-      text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 500;
-      transition: color 0.3s;
-      letter-spacing: 0.3px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.4px;
+      transition: color 0.25s ease;
     }
 
-    .nav-links a:hover { color: var(--nhs-light); }
+    .nav-links a:hover { color: var(--white); }
 
-    /* ── Hero ── */
+    /* ─── Hero ─── */
     .hero {
       position: relative;
+      z-index: 1;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 1;
+      padding: 6rem 2rem 4rem;
+      text-align: center;
       overflow: hidden;
     }
 
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 30% 50%, rgba(0,48,135,0.6) 0%, transparent 60%),
-                  radial-gradient(ellipse at 70% 30%, rgba(65,182,230,0.15) 0%, transparent 50%),
-                  radial-gradient(ellipse at 50% 80%, rgba(0,150,57,0.1) 0%, transparent 50%);
-    }
-
-    /* Animated heartbeat line */
-    .ecg-line {
-      position: absolute;
-      bottom: 15%;
-      left: 0; right: 0;
-      height: 80px;
-      opacity: 0.3;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      padding: 2rem;
-      max-width: 900px;
-    }
-
-    .hero-badge {
+    .hero-eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      background: rgba(65,182,230,0.15);
-      border: 1px solid rgba(65,182,230,0.4);
-      border-radius: 50px;
-      padding: 0.4rem 1.2rem;
-      font-size: 0.8rem;
-      color: var(--nhs-light);
-      font-weight: 600;
-      letter-spacing: 1px;
+      gap: 0.6rem;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
+      color: var(--sky);
       margin-bottom: 2rem;
-      animation: fadeSlideDown 0.8s ease forwards;
+      opacity: 0;
+      animation: rise 0.9s cubic-bezier(0.22,1,0.36,1) 0.2s forwards;
     }
 
-    .pulse-dot {
-      width: 8px; height: 8px;
-      background: var(--nhs-green);
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(1.4); }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--sky);
+      opacity: 0.5;
     }
 
     .hero-name {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(3rem, 7vw, 6rem);
-      font-weight: 700;
-      line-height: 1.1;
-      margin-bottom: 1rem;
-      animation: fadeSlideUp 0.8s ease 0.2s both;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 10vw, 8.5rem);
+      font-weight: 500;
+      line-height: 0.92;
+      letter-spacing: -1px;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: rise 1s cubic-bezier(0.22,1,0.36,1) 0.35s forwards;
     }
 
-    .hero-name .highlight {
-      background: linear-gradient(135deg, var(--nhs-light), #a8e6ff);
+    .hero-name span {
+      display: block;
+      background: linear-gradient(160deg, #ffffff 30%, rgba(65,182,230,0.7) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
-    .hero-title {
-      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-      color: rgba(255,255,255,0.75);
-      font-weight: 400;
-      margin-bottom: 0.5rem;
-      animation: fadeSlideUp 0.8s ease 0.35s both;
+    .hero-name span:last-child {
+      background: linear-gradient(160deg, var(--sky) 0%, #a8d8f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    .hero-org {
+    .hero-descriptor {
       font-size: 1rem;
-      color: var(--nhs-light);
-      font-weight: 600;
-      margin-bottom: 2.5rem;
-      animation: fadeSlideUp 0.8s ease 0.5s both;
+      font-weight: 400;
+      color: var(--muted);
+      letter-spacing: 0.3px;
+      line-height: 1.6;
+      max-width: 420px;
+      margin: 0 auto 3rem;
+      opacity: 0;
+      animation: rise 1s cubic-bezier(0.22,1,0.36,1) 0.5s forwards;
     }
 
-    .hero-stats {
-      display: flex;
-      justify-content: center;
-      gap: 3rem;
-      margin-bottom: 2.5rem;
-      animation: fadeSlideUp 0.8s ease 0.6s both;
-    }
-
-    .stat { text-align: center; }
-    .stat-number {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--nhs-light);
-      line-height: 1;
-    }
-    .stat-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 1px; }
-
-    .hero-ctas {
+    .hero-actions {
       display: flex;
       gap: 1rem;
       justify-content: center;
       flex-wrap: wrap;
-      animation: fadeSlideUp 0.8s ease 0.75s both;
+      opacity: 0;
+      animation: rise 1s cubic-bezier(0.22,1,0.36,1) 0.65s forwards;
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--nhs-blue), var(--nhs-light));
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      letter-spacing: 0.2px;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .btn-solid {
+      background: var(--blue);
       color: white;
-      padding: 0.85rem 2rem;
-      border-radius: 50px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 30px rgba(0,48,135,0.4);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 40px rgba(65,182,230,0.4);
-    }
-
-    .btn-outline {
-      border: 2px solid rgba(65,182,230,0.5);
-      color: var(--nhs-light);
-      padding: 0.85rem 2rem;
-      border-radius: 50px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-    }
-
-    .btn-outline:hover {
-      background: rgba(65,182,230,0.1);
-      border-color: var(--nhs-light);
-      transform: translateY(-3px);
-    }
-
-    /* ── Sections ── */
-    section { position: relative; z-index: 1; }
-
-    .section-wrapper {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 5rem 2rem;
-    }
-
-    .section-tag {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      color: var(--nhs-light);
-      margin-bottom: 0.75rem;
-    }
-
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
-
-    .section-line {
-      width: 60px; height: 4px;
-      background: linear-gradient(90deg, var(--nhs-blue), var(--nhs-light));
-      border-radius: 2px;
-      margin-bottom: 3rem;
-    }
-
-    /* ── About ── */
-    #about { background: rgba(0,32,91,0.15); border-top: 1px solid rgba(65,182,230,0.1); }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: center;
-    }
-
-    .avatar-wrapper {
-      position: relative;
-      display: flex;
-      justify-content: center;
-    }
-
-    .avatar-ring {
-      width: 280px; height: 280px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--nhs-blue), var(--nhs-light));
-      padding: 4px;
-      animation: rotate 8s linear infinite;
-      position: relative;
-    }
-
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .avatar-inner {
-      width: 100%; height: 100%;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #050d1a 40%, rgba(0,48,135,0.4));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 7rem;
-    }
-
-    .floating-badge {
-      position: absolute;
-      background: rgba(0,150,57,0.9);
-      border: 1px solid rgba(0,200,80,0.4);
-      border-radius: 12px;
-      padding: 0.6rem 1rem;
-      font-size: 0.8rem;
-      font-weight: 700;
-      backdrop-filter: blur(8px);
-      animation: float 3s ease-in-out infinite;
-    }
-
-    .badge-1 { bottom: 10px; right: -10px; }
-    .badge-2 { top: 20px; left: -10px; animation-delay: 1.5s; background: rgba(0,48,135,0.9); }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .about-text p {
-      color: rgba(255,255,255,0.75);
-      line-height: 1.8;
-      margin-bottom: 1.5rem;
-      font-size: 1.05rem;
-    }
-
-    .about-info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .info-item {
-      background: rgba(255,255,255,0.05);
       border: 1px solid rgba(65,182,230,0.2);
-      border-radius: 12px;
-      padding: 1rem;
-      transition: all 0.3s;
+      box-shadow: 0 0 0 1px rgba(0,48,135,0.3), 0 8px 24px rgba(0,48,135,0.3);
     }
 
-    .info-item:hover {
-      background: rgba(65,182,230,0.1);
-      border-color: rgba(65,182,230,0.4);
-      transform: translateY(-2px);
+    .btn-solid:hover {
+      background: #003fa8;
+      box-shadow: 0 0 0 1px rgba(65,182,230,0.3), 0 12px 32px rgba(0,48,135,0.4);
+      transform: translateY(-1px);
     }
 
-    .info-label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--nhs-light);
-      margin-bottom: 0.25rem;
-      font-weight: 600;
+    .btn-ghost {
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid var(--border);
     }
 
-    .info-value { font-size: 0.9rem; font-weight: 500; }
-
-    /* ── Skills ── */
-    #skills { border-top: 1px solid rgba(65,182,230,0.1); }
-
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.06);
+      color: var(--white);
+      border-color: var(--border-hi);
+      transform: translateY(-1px);
     }
 
-    .skill-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(65,182,230,0.15);
-      border-radius: 20px;
-      padding: 2rem;
-      transition: all 0.3s ease;
-      position: relative;
+    /* ECG line */
+    .ecg-wrap {
+      position: absolute;
+      bottom: 10%;
+      left: 0; right: 0;
+      height: 60px;
+      opacity: 0.18;
       overflow: hidden;
     }
 
-    .skill-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 3px;
-      background: linear-gradient(90deg, var(--nhs-blue), var(--nhs-light));
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.4s ease;
-    }
-
-    .skill-card:hover { transform: translateY(-6px); border-color: rgba(65,182,230,0.4); background: rgba(65,182,230,0.05); }
-    .skill-card:hover::before { transform: scaleX(1); }
-
-    .skill-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-    .skill-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .skill-desc { font-size: 0.875rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
-
-    .skill-bar-wrap { margin-top: 1.2rem; }
-    .skill-bar-label { display: flex; justify-content: space-between; font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem; }
-    .skill-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
-    .skill-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--nhs-blue), var(--nhs-light));
-      border-radius: 2px;
-      width: 0;
-      transition: width 1.5s ease;
-    }
-
-    /* ── Education ── */
-    #education { background: rgba(0,32,91,0.15); border-top: 1px solid rgba(65,182,230,0.1); }
-
-    .timeline { position: relative; padding-left: 2rem; }
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 8px; top: 0; bottom: 0;
-      width: 2px;
-      background: linear-gradient(180deg, var(--nhs-blue), var(--nhs-light), transparent);
-    }
-
-    .timeline-item {
-      position: relative;
-      margin-bottom: 3rem;
-      padding-left: 2rem;
-      opacity: 0;
-      transform: translateX(-20px);
-      transition: all 0.6s ease;
-    }
-
-    .timeline-item.visible { opacity: 1; transform: translateX(0); }
-
-    .timeline-dot {
-      position: absolute;
-      left: -2rem;
-      top: 6px;
-      width: 18px; height: 18px;
-      background: linear-gradient(135deg, var(--nhs-blue), var(--nhs-light));
-      border-radius: 50%;
-      border: 3px solid #050d1a;
-      box-shadow: 0 0 0 3px rgba(65,182,230,0.3);
-    }
-
-    .timeline-date {
-      font-size: 0.8rem;
-      color: var(--nhs-light);
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
-
-    .timeline-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(65,182,230,0.2);
-      border-radius: 16px;
-      padding: 1.5rem;
-      transition: all 0.3s;
-    }
-
-    .timeline-card:hover { border-color: rgba(65,182,230,0.5); background: rgba(65,182,230,0.06); }
-    .timeline-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem; }
-    .timeline-card h4 { font-size: 0.9rem; color: var(--nhs-light); font-weight: 600; margin-bottom: 0.75rem; }
-    .timeline-card p { font-size: 0.875rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
-
-    /* ── NHS Section ── */
-    #nhs { border-top: 1px solid rgba(65,182,230,0.1); }
-
-    .nhs-hero {
-      background: linear-gradient(135deg, rgba(0,48,135,0.4), rgba(0,150,57,0.2));
-      border: 1px solid rgba(65,182,230,0.2);
-      border-radius: 24px;
-      padding: 3rem;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      align-items: center;
-    }
-
-    .nhs-logo-box {
-      text-align: center;
-    }
-
-    .nhs-logo {
-      background: #003087;
-      color: white;
-      font-size: 2.5rem;
-      font-weight: 900;
-      letter-spacing: -1px;
-      padding: 1rem 2rem;
-      border-radius: 12px;
-      display: inline-block;
-      box-shadow: 0 0 40px rgba(0,48,135,0.6);
-      animation: glow 3s ease-in-out infinite;
-    }
-
-    @keyframes glow {
-      0%, 100% { box-shadow: 0 0 20px rgba(0,48,135,0.6); }
-      50% { box-shadow: 0 0 50px rgba(65,182,230,0.5); }
-    }
-
-    .nhs-subtitle { margin-top: 0.75rem; font-size: 0.85rem; color: rgba(255,255,255,0.5); }
-
-    .nhs-info h3 {
-      font-size: 1.6rem;
-      font-weight: 800;
-      margin-bottom: 1rem;
-      color: var(--nhs-light);
-    }
-
-    .nhs-info p {
-      color: rgba(255,255,255,0.7);
-      line-height: 1.7;
-      font-size: 0.95rem;
-      margin-bottom: 1rem;
-    }
-
-    .nhs-values {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-top: 1.5rem;
-    }
-
-    .value-chip {
-      background: rgba(0,48,135,0.4);
-      border: 1px solid rgba(65,182,230,0.3);
-      border-radius: 50px;
-      padding: 0.35rem 1rem;
-      font-size: 0.8rem;
-      color: var(--nhs-light);
-      font-weight: 600;
-    }
-
-    /* ── Contact ── */
-    #contact { background: rgba(0,32,91,0.2); border-top: 1px solid rgba(65,182,230,0.1); }
-
-    .contact-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3rem;
-    }
-
-    .contact-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(65,182,230,0.2);
-      border-radius: 16px;
-      padding: 2rem;
-      text-align: center;
-      transition: all 0.3s;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .contact-card:hover {
-      background: rgba(65,182,230,0.1);
-      border-color: rgba(65,182,230,0.5);
-      transform: translateY(-4px);
-    }
-
-    .contact-icon { font-size: 2rem; margin-bottom: 0.75rem; }
-    .contact-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--nhs-light); font-weight: 700; margin-bottom: 0.25rem; }
-    .contact-value { font-size: 0.9rem; color: rgba(255,255,255,0.8); }
-
-    /* ── Footer ── */
-    footer {
-      text-align: center;
-      padding: 2rem;
-      border-top: 1px solid rgba(65,182,230,0.1);
-      color: rgba(255,255,255,0.3);
-      font-size: 0.85rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    footer span { color: var(--nhs-light); }
-
-    /* ── Animations ── */
-    @keyframes fadeSlideDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeSlideUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-
-    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .ecg-wrap svg { width: 100%; height: 100%; }
 
     /* Scroll indicator */
-    .scroll-down {
+    .scroll-hint {
       position: absolute;
-      bottom: 2rem;
+      bottom: 2.5rem;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.5rem;
-      animation: fadeSlideUp 1s ease 1.5s both;
-      z-index: 2;
+      opacity: 0;
+      animation: rise 1s ease 1.4s forwards;
     }
 
-    .scroll-down span { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
-
-    .scroll-arrow {
-      width: 24px; height: 24px;
-      border-right: 2px solid rgba(65,182,230,0.5);
-      border-bottom: 2px solid rgba(65,182,230,0.5);
-      transform: rotate(45deg);
-      animation: bounce 2s ease infinite;
+    .scroll-hint span {
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--faint);
     }
 
-    @keyframes bounce {
-      0%, 100% { transform: rotate(45deg) translateY(0); opacity: 1; }
-      50% { transform: rotate(45deg) translateY(6px); opacity: 0.5; }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--border-hi), transparent);
+      animation: pulse-line 2s ease-in-out infinite;
     }
 
-    /* ── Responsive ── */
-    @media (max-width: 768px) {
-      .about-grid, .nhs-hero { grid-template-columns: 1fr; gap: 2rem; }
-      .hero-stats { gap: 1.5rem; }
-      nav { padding: 1rem; }
-      .nav-links { gap: 1rem; }
-      .nav-links a { font-size: 0.8rem; }
-      .about-info-grid { grid-template-columns: 1fr; }
+    @keyframes pulse-line {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.1); }
+    }
+
+    /* ─── Section layout ─── */
+    .section {
+      position: relative;
+      z-index: 1;
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 7rem 2rem;
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--sky);
+      margin-bottom: 1.25rem;
+    }
+
+    .section-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 500;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+
+    .section-sub {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 520px;
+    }
+
+    hr.divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* ─── Reveal animation ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal.in { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ─── About ─── */
+    #about { border-top: 1px solid var(--border); }
+
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 6rem;
+      align-items: start;
+      margin-top: 4rem;
+    }
+
+    .about-visual {
+      position: sticky;
+      top: 5rem;
+    }
+
+    .monogram-box {
+      width: 100%;
+      aspect-ratio: 1;
+      max-width: 340px;
+      background: linear-gradient(135deg, rgba(0,48,135,0.15) 0%, rgba(65,182,230,0.05) 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .monogram-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(65,182,230,0.3), transparent);
+    }
+
+    .monogram {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--white) 30%, var(--sky) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0 1.5rem;
+    }
+
+    .meta-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .meta-pill-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--sky);
+      flex-shrink: 0;
+    }
+
+    .meta-pill-dot.green { background: var(--green); }
+
+    .about-body p {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.85;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-body p strong { color: var(--white); font-weight: 600; }
+
+    .about-body p:first-child {
+      font-size: 1.15rem;
+      color: rgba(240,244,248,0.7);
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 2.5rem;
+    }
+
+    .stat-cell {
+      background: var(--bg2);
+      padding: 1.25rem 1.5rem;
+      transition: background 0.2s;
+    }
+
+    .stat-cell:hover { background: rgba(65,182,230,0.04); }
+
+    .stat-cell-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--sky);
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-cell-value {
+      font-size: 0.9rem;
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    /* ─── Skills ─── */
+    #skills { border-top: 1px solid var(--border); }
+
+    .skills-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: end;
+      margin-bottom: 4rem;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .skill-item {
+      background: var(--bg2);
+      padding: 2rem 1.75rem;
+      position: relative;
+      transition: background 0.3s ease;
+    }
+
+    .skill-item::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--sky));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    .skill-item:hover { background: rgba(65,182,230,0.03); }
+    .skill-item:hover::after { transform: scaleX(1); }
+
+    .skill-glyph {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      display: block;
+      line-height: 1;
+    }
+
+    .skill-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .skill-body {
+      font-size: 0.78rem;
+      color: var(--faint);
+      line-height: 1.6;
+    }
+
+    .skill-meter {
+      margin-top: 1.25rem;
+      height: 2px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .skill-meter-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--sky));
+      border-radius: 2px;
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    /* ─── Education ─── */
+    #education { border-top: 1px solid var(--border); }
+
+    .edu-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 4rem;
+      margin-top: 4rem;
+    }
+
+    .edu-left {
+      position: sticky;
+      top: 5rem;
+      align-self: start;
+    }
+
+    .edu-left p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-top: 1rem;
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .tl-item {
+      display: grid;
+      grid-template-columns: 1px 1fr;
+      gap: 2rem;
+      padding-bottom: 3rem;
+    }
+
+    .tl-item:last-child { padding-bottom: 0; }
+
+    .tl-line-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .tl-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--sky);
+      flex-shrink: 0;
+      box-shadow: 0 0 0 3px rgba(65,182,230,0.12);
+      margin-top: 4px;
+    }
+
+    .tl-line {
+      width: 1px;
+      flex: 1;
+      background: linear-gradient(to bottom, rgba(65,182,230,0.25), transparent);
+      margin-top: 8px;
+    }
+
+    .tl-item:last-child .tl-line { display: none; }
+
+    .tl-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      transition: border-color 0.3s, background 0.3s;
+    }
+
+    .tl-card:hover {
+      border-color: var(--border-hi);
+      background: rgba(65,182,230,0.03);
+    }
+
+    .tl-date {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--sky);
+      margin-bottom: 0.75rem;
+    }
+
+    .tl-card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+
+    .tl-card h4 {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .tl-card p {
+      font-size: 0.82rem;
+      color: var(--faint);
+      line-height: 1.7;
+    }
+
+    /* ─── NHS Feature ─── */
+    #nhs { border-top: 1px solid var(--border); }
+
+    .nhs-panel {
+      margin-top: 4rem;
+      background: linear-gradient(135deg, rgba(0,32,91,0.18) 0%, rgba(0,48,135,0.08) 100%);
+      border: 1px solid var(--border-hi);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .nhs-panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(65,182,230,0.4), transparent);
+    }
+
+    .nhs-inner {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 0;
+    }
+
+    .nhs-left {
+      padding: 3rem;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .nhs-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px; height: 40px;
+      background: #003087;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: white;
+      box-shadow: 0 0 32px rgba(0,48,135,0.4);
+    }
+
+    .nhs-meta-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .nhs-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .nhs-meta-key {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--sky);
+    }
+
+    .nhs-meta-val {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .nhs-right {
+      padding: 3rem;
+    }
+
+    .nhs-right h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 500;
+      color: var(--white);
+      margin-bottom: 1.25rem;
+      line-height: 1.2;
+    }
+
+    .nhs-right p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--sky);
+      background: rgba(65,182,230,0.07);
+      border: 1px solid rgba(65,182,230,0.15);
+      border-radius: 4px;
+      padding: 0.3rem 0.75rem;
+      letter-spacing: 0.3px;
+      transition: all 0.2s;
+    }
+
+    .tag:hover {
+      background: rgba(65,182,230,0.14);
+      border-color: rgba(65,182,230,0.3);
+    }
+
+    /* ─── Contact ─── */
+    #contact { border-top: 1px solid var(--border); }
+
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 6rem;
+      align-items: start;
+      margin-top: 4rem;
+    }
+
+    .contact-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .contact-row {
+      background: var(--bg2);
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: background 0.2s;
+    }
+
+    .contact-row:hover { background: rgba(65,182,230,0.04); }
+
+    .contact-icon-box {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--sky-dim);
+      border: 1px solid var(--border-hi);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .contact-row-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--sky);
+      margin-bottom: 0.15rem;
+    }
+
+    .contact-row-value {
+      font-size: 0.85rem;
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    .contact-quote {
+      padding: 2.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      position: relative;
+    }
+
+    .contact-quote::before {
+      content: '"';
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem;
+      line-height: 1;
+      color: var(--sky);
+      opacity: 0.25;
+      position: absolute;
+      top: 1rem;
+      left: 1.5rem;
+      pointer-events: none;
+    }
+
+    .contact-quote p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--white);
+      margin-top: 1.5rem;
+      font-style: italic;
+    }
+
+    .contact-quote cite {
+      display: block;
+      margin-top: 1.5rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-style: normal;
+      color: var(--sky);
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    footer p {
+      font-size: 0.78rem;
+      color: var(--faint);
+    }
+
+    footer p span { color: var(--sky); }
+
+    footer .footer-right {
+      font-size: 0.72rem;
+      color: rgba(240,244,248,0.12);
+      letter-spacing: 0.5px;
+    }
+
+    /* ─── Keyframes ─── */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 900px) {
+      .about-layout, .edu-layout, .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .about-visual { position: static; }
+      .edu-left { position: static; }
+      .skills-header, .nhs-inner { grid-template-columns: 1fr; }
+      .nhs-left { border-right: none; border-bottom: 1px solid var(--border); }
+      nav { padding: 0 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+
+    @media (max-width: 640px) {
+      .skills-grid { grid-template-columns: 1fr; }
+      .stat-row { grid-template-columns: 1fr; }
+      nav .nav-links { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Particle Canvas -->
-  <canvas id="particles-canvas"></canvas>
+  <!-- Ambient lights -->
+  <div class="ambient a1"></div>
+  <div class="ambient a2"></div>
+  <div class="ambient a3"></div>
 
   <!-- Nav -->
-  <nav id="navbar">
-    <div class="nav-logo">K<span>P</span></div>
+  <nav>
+    <div class="nav-logo">Kabita <em>Phuyal</em></div>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#skills">Skills</a></li>
@@ -657,515 +933,424 @@
   </nav>
 
   <!-- Hero -->
-  <section class="hero" id="home">
-    <div class="hero-bg"></div>
-
-    <!-- ECG SVG Animation -->
-    <svg class="ecg-line" viewBox="0 0 1200 80" preserveAspectRatio="none">
-      <polyline
-        id="ecg-path"
-        fill="none"
-        stroke="#41B6E6"
-        stroke-width="2"
-        points=""
-      />
-    </svg>
-
-    <div class="hero-content">
-      <div class="hero-badge">
-        <div class="pulse-dot"></div>
-        Mental Health Nurse · NHS UK
-      </div>
-      <h1 class="hero-name">
-        Kabita<br><span class="highlight">Phuyal</span>
-      </h1>
-      <p class="hero-title">Registered Mental Health Nurse</p>
-      <p class="hero-org">National Health Service · Hemel Hempstead, UK</p>
-
-      <div class="hero-stats">
-        <div class="stat">
-          <div class="stat-number">NHS</div>
-          <div class="stat-label">Healthcare</div>
-        </div>
-        <div class="stat">
-          <div class="stat-number">MH</div>
-          <div class="stat-label">Mental Health</div>
-        </div>
-        <div class="stat">
-          <div class="stat-number">UK</div>
-          <div class="stat-label">Registered</div>
-        </div>
-      </div>
-
-      <div class="hero-ctas">
-        <a href="#about" class="btn-primary">About Me</a>
-        <a href="#contact" class="btn-outline">Get in Touch</a>
-      </div>
+  <section class="hero">
+    <div class="hero-eyebrow">Mental Health Nurse · NHS United Kingdom</div>
+    <h1 class="hero-name">
+      <span>Kabita</span>
+      <span>Phuyal</span>
+    </h1>
+    <p class="hero-descriptor">
+      Registered Mental Health Nurse working within the National Health Service,
+      dedicated to compassionate, evidence-based care in Hemel Hempstead.
+    </p>
+    <div class="hero-actions">
+      <a href="#about" class="btn btn-solid">About me</a>
+      <a href="#contact" class="btn btn-ghost">Get in touch</a>
     </div>
 
-    <div class="scroll-down">
+    <!-- ECG line -->
+    <div class="ecg-wrap">
+      <svg viewBox="0 0 1200 60" preserveAspectRatio="none" id="ecg-svg">
+        <polyline id="ecg-path" fill="none" stroke="#41B6E6" stroke-width="1.5" points="" />
+      </svg>
+    </div>
+
+    <div class="scroll-hint">
       <span>Scroll</span>
-      <div class="scroll-arrow"></div>
+      <div class="scroll-line"></div>
     </div>
   </section>
+
+  <hr class="divider" />
 
   <!-- About -->
-  <section id="about">
-    <div class="section-wrapper">
-      <div class="reveal">
-        <p class="section-tag">Who I Am</p>
-        <h2 class="section-title">About Me</h2>
-        <div class="section-line"></div>
-      </div>
+  <section class="section" id="about">
+    <div class="wrap">
+      <p class="section-label reveal">About</p>
+      <h2 class="section-heading reveal reveal-delay-1">A nurse who leads<br>with empathy.</h2>
 
-      <div class="about-grid">
-        <div class="avatar-wrapper reveal">
-          <div class="avatar-ring">
-            <div class="avatar-inner">🏥</div>
+      <div class="about-layout">
+        <div class="about-visual reveal reveal-delay-1">
+          <div class="monogram-box">
+            <div class="monogram">KP</div>
+            <div class="badge-row">
+              <div class="meta-pill">
+                <div class="meta-pill-dot green"></div>
+                Available · NHS
+              </div>
+              <div class="meta-pill">
+                <div class="meta-pill-dot"></div>
+                Hemel Hempstead, UK
+              </div>
+              <div class="meta-pill">
+                <div class="meta-pill-dot"></div>
+                West Herts College
+              </div>
+            </div>
           </div>
-          <div class="floating-badge badge-1">✅ NHS Registered</div>
-          <div class="floating-badge badge-2">🧠 Mental Health</div>
+
+          <div class="stat-row" style="margin-top: 1rem;">
+            <div class="stat-cell">
+              <div class="stat-cell-label">Employer</div>
+              <div class="stat-cell-value">NHS UK</div>
+            </div>
+            <div class="stat-cell">
+              <div class="stat-cell-label">Speciality</div>
+              <div class="stat-cell-value">Mental Health</div>
+            </div>
+            <div class="stat-cell">
+              <div class="stat-cell-label">Qualification</div>
+              <div class="stat-cell-value">RMN</div>
+            </div>
+            <div class="stat-cell">
+              <div class="stat-cell-label">Location</div>
+              <div class="stat-cell-value">Hertfordshire</div>
+            </div>
+          </div>
         </div>
 
-        <div class="about-text reveal">
-          <p>
-            Hello, I'm <strong>Kabita Phuyal</strong> — a dedicated and compassionate
-            Mental Health Nurse working within the <strong>National Health Service (NHS)</strong>
-            in the United Kingdom. I am deeply passionate about improving the lives of those
-            facing mental health challenges through evidence-based, person-centred care.
+        <div class="about-body">
+          <p class="reveal reveal-delay-2">
+            I'm <strong>Kabita Phuyal</strong> — a Registered Mental Health Nurse
+            within the National Health Service in the United Kingdom. My work sits
+            at the intersection of clinical precision and human connection.
           </p>
-          <p>
-            With a solid academic foundation from <strong>West Herts College</strong> and
-            hands-on NHS experience, I bring both knowledge and empathy to every patient
-            interaction. I believe in treating the whole person — mind, body, and soul.
+          <p class="reveal reveal-delay-2">
+            Educated at <strong>West Herts College</strong>, I built my foundation in
+            healthcare with a focus on mental health nursing — combining anatomy, physiology,
+            and the psychology of care into a practice shaped by curiosity and compassion.
           </p>
-          <p>
-            Based in <strong>Hemel Hempstead, Hertfordshire</strong>, I am committed to
-            promoting mental wellbeing, reducing stigma, and advocating for accessible
-            mental healthcare across the community.
+          <p class="reveal reveal-delay-3">
+            Every day I work alongside patients facing anxiety, depression, psychosis,
+            and personality disorders — people who deserve not just clinical competence,
+            but dignity, patience, and genuine human presence. That is what I bring.
           </p>
-
-          <div class="about-info-grid">
-            <div class="info-item">
-              <div class="info-label">Location</div>
-              <div class="info-value">Hemel Hempstead, UK</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Role</div>
-              <div class="info-value">Mental Health Nurse</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Organisation</div>
-              <div class="info-value">NHS United Kingdom</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Education</div>
-              <div class="info-value">West Herts College</div>
-            </div>
-          </div>
+          <p class="reveal reveal-delay-3">
+            Based in <strong>Hemel Hempstead, Hertfordshire</strong>, I am an active
+            advocate for de-stigmatising mental health and building a more accessible,
+            inclusive healthcare environment across the community.
+          </p>
         </div>
       </div>
     </div>
   </section>
+
+  <hr class="divider" />
 
   <!-- Skills -->
-  <section id="skills">
-    <div class="section-wrapper">
-      <div class="reveal">
-        <p class="section-tag">What I Do</p>
-        <h2 class="section-title">Core Skills</h2>
-        <div class="section-line"></div>
+  <section class="section" id="skills">
+    <div class="wrap">
+      <div class="skills-header">
+        <div>
+          <p class="section-label reveal">Expertise</p>
+          <h2 class="section-heading reveal reveal-delay-1">Core clinical<br>capabilities.</h2>
+        </div>
+        <p class="section-sub reveal reveal-delay-2">
+          A broad skill set developed through NHS clinical practice — centred on the
+          whole patient and built on evidence-based approaches.
+        </p>
       </div>
 
-      <div class="skills-grid">
-        <div class="skill-card reveal">
-          <div class="skill-icon">🧠</div>
-          <div class="skill-name">Mental Health Assessment</div>
-          <div class="skill-desc">Conducting comprehensive mental health assessments, risk evaluations, and care planning for patients with complex needs.</div>
-          <div class="skill-bar-wrap">
-            <div class="skill-bar-label"><span>Proficiency</span><span>95%</span></div>
-            <div class="skill-bar"><div class="skill-bar-fill" data-width="95"></div></div>
-          </div>
+      <div class="skills-grid reveal">
+        <div class="skill-item">
+          <span class="skill-glyph">◈</span>
+          <div class="skill-title">Mental Health Assessment</div>
+          <div class="skill-body">Comprehensive assessment, risk evaluation, and care planning for patients with complex presentations.</div>
+          <div class="skill-meter"><div class="skill-meter-fill" data-w="95"></div></div>
         </div>
-
-        <div class="skill-card reveal">
-          <div class="skill-icon">💊</div>
-          <div class="skill-name">Medication Management</div>
-          <div class="skill-desc">Safe administration and monitoring of psychiatric medications, understanding side effects, and patient education.</div>
-          <div class="skill-bar-wrap">
-            <div class="skill-bar-label"><span>Proficiency</span><span>90%</span></div>
-            <div class="skill-bar"><div class="skill-bar-fill" data-width="90"></div></div>
-          </div>
+        <div class="skill-item">
+          <span class="skill-glyph">◈</span>
+          <div class="skill-title">Medication Management</div>
+          <div class="skill-body">Safe administration and monitoring of psychiatric medications with patient-centred education.</div>
+          <div class="skill-meter"><div class="skill-meter-fill" data-w="90"></div></div>
         </div>
-
-        <div class="skill-card reveal">
-          <div class="skill-icon">🤝</div>
-          <div class="skill-name">Therapeutic Communication</div>
-          <div class="skill-desc">Building trusting therapeutic relationships through empathetic listening, motivational interviewing, and CBT techniques.</div>
-          <div class="skill-bar-wrap">
-            <div class="skill-bar-label"><span>Proficiency</span><span>97%</span></div>
-            <div class="skill-bar"><div class="skill-bar-fill" data-width="97"></div></div>
-          </div>
+        <div class="skill-item">
+          <span class="skill-glyph">◈</span>
+          <div class="skill-title">Therapeutic Communication</div>
+          <div class="skill-body">Empathetic listening, motivational interviewing, and CBT-informed conversation techniques.</div>
+          <div class="skill-meter"><div class="skill-meter-fill" data-w="97"></div></div>
         </div>
-
-        <div class="skill-card reveal">
-          <div class="skill-icon">📋</div>
-          <div class="skill-name">Care Planning & Documentation</div>
-          <div class="skill-desc">Developing individualised care plans, maintaining accurate records, and collaborating with multidisciplinary teams.</div>
-          <div class="skill-bar-wrap">
-            <div class="skill-bar-label"><span>Proficiency</span><span>92%</span></div>
-            <div class="skill-bar"><div class="skill-bar-fill" data-width="92"></div></div>
-          </div>
+        <div class="skill-item">
+          <span class="skill-glyph">◈</span>
+          <div class="skill-title">Care Planning</div>
+          <div class="skill-body">Individualised care plans, accurate clinical documentation, and multidisciplinary collaboration.</div>
+          <div class="skill-meter"><div class="skill-meter-fill" data-w="92"></div></div>
         </div>
-
-        <div class="skill-card reveal">
-          <div class="skill-icon">🚨</div>
-          <div class="skill-name">Crisis Intervention</div>
-          <div class="skill-desc">Responding effectively to psychiatric emergencies, de-escalation strategies, and safeguarding vulnerable individuals.</div>
-          <div class="skill-bar-wrap">
-            <div class="skill-bar-label"><span>Proficiency</span><span>88%</span></div>
-            <div class="skill-bar"><div class="skill-bar-fill" data-width="88"></div></div>
-          </div>
+        <div class="skill-item">
+          <span class="skill-glyph">◈</span>
+          <div class="skill-title">Crisis Intervention</div>
+          <div class="skill-body">Responsive psychiatric emergency management, de-escalation, and safeguarding of vulnerable individuals.</div>
+          <div class="skill-meter"><div class="skill-meter-fill" data-w="88"></div></div>
         </div>
-
-        <div class="skill-card reveal">
-          <div class="skill-icon">🌍</div>
-          <div class="skill-name">Cultural Competence</div>
-          <div class="skill-desc">Providing culturally sensitive care with awareness of diverse backgrounds, languages, and belief systems.</div>
-          <div class="skill-bar-wrap">
-            <div class="skill-bar-label"><span>Proficiency</span><span>93%</span></div>
-            <div class="skill-bar"><div class="skill-bar-fill" data-width="93"></div></div>
-          </div>
+        <div class="skill-item">
+          <span class="skill-glyph">◈</span>
+          <div class="skill-title">Cultural Competence</div>
+          <div class="skill-body">Culturally sensitive practice across diverse backgrounds, languages, and belief systems.</div>
+          <div class="skill-meter"><div class="skill-meter-fill" data-w="93"></div></div>
         </div>
       </div>
     </div>
   </section>
+
+  <hr class="divider" />
 
   <!-- Education -->
-  <section id="education">
-    <div class="section-wrapper">
-      <div class="reveal">
-        <p class="section-tag">Academic Journey</p>
-        <h2 class="section-title">Education</h2>
-        <div class="section-line"></div>
-      </div>
+  <section class="section" id="education">
+    <div class="wrap">
+      <p class="section-label reveal">Education & Career</p>
+      <h2 class="section-heading reveal reveal-delay-1">The path to<br>where I am.</h2>
 
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">West Herts College</div>
-          <div class="timeline-card">
-            <h3>Nursing & Healthcare Studies</h3>
-            <h4>West Herts College, Hertfordshire, UK</h4>
-            <p>
-              Completed foundational and advanced nursing education at West Herts College,
-              gaining comprehensive knowledge in healthcare, anatomy, physiology, and mental health
-              nursing practice. Developed critical clinical skills through placements and simulated
-              learning environments.
-            </p>
-          </div>
+      <div class="edu-layout">
+        <div class="edu-left reveal reveal-delay-1">
+          <p>
+            A journey from academic study through professional registration to
+            frontline NHS care — each step shaping a more capable, compassionate nurse.
+          </p>
         </div>
 
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">Professional Registration</div>
-          <div class="timeline-card">
-            <h3>Registered Mental Health Nurse (RMN)</h3>
-            <h4>Nursing & Midwifery Council (NMC), UK</h4>
-            <p>
-              Fully registered with the Nursing and Midwifery Council as a Registered Mental
-              Health Nurse. Committed to maintaining professional standards, ongoing CPD (Continuing
-              Professional Development), and upholding the NMC Code of Conduct.
-            </p>
+        <div class="timeline">
+          <div class="tl-item reveal reveal-delay-1">
+            <div class="tl-line-col">
+              <div class="tl-dot"></div>
+              <div class="tl-line"></div>
+            </div>
+            <div class="tl-card">
+              <div class="tl-date">West Herts College</div>
+              <h3>Nursing & Healthcare Studies</h3>
+              <h4>West Herts College, Hertfordshire</h4>
+              <p>
+                Completed foundational and advanced nursing education, gaining comprehensive
+                knowledge in healthcare sciences, anatomy, physiology, and mental health
+                nursing practice through a blend of academic rigour and clinical placement.
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">NHS Career</div>
-          <div class="timeline-card">
-            <h3>Mental Health Nurse – NHS</h3>
-            <h4>National Health Service, Hemel Hempstead</h4>
-            <p>
-              Joined the NHS as a Mental Health Nurse, working within specialist mental health
-              services to provide high-quality, evidence-based care to patients with a wide range
-              of mental health conditions including anxiety, depression, psychosis, and personality
-              disorders.
-            </p>
+          <div class="tl-item reveal reveal-delay-2">
+            <div class="tl-line-col">
+              <div class="tl-dot"></div>
+              <div class="tl-line"></div>
+            </div>
+            <div class="tl-card">
+              <div class="tl-date">NMC Registration</div>
+              <h3>Registered Mental Health Nurse (RMN)</h3>
+              <h4>Nursing & Midwifery Council, UK</h4>
+              <p>
+                Achieved full professional registration with the NMC as a Registered Mental
+                Health Nurse. Committed to ongoing CPD, upholding the NMC Code of Conduct,
+                and maintaining the highest standards of professional practice.
+              </p>
+            </div>
+          </div>
+
+          <div class="tl-item reveal reveal-delay-3">
+            <div class="tl-line-col">
+              <div class="tl-dot"></div>
+              <div class="tl-line"></div>
+            </div>
+            <div class="tl-card">
+              <div class="tl-date">Current</div>
+              <h3>Mental Health Nurse — NHS</h3>
+              <h4>National Health Service, Hemel Hempstead</h4>
+              <p>
+                Working within specialist NHS mental health services, delivering evidence-based
+                care for patients presenting with anxiety, depression, psychosis, and personality
+                disorders — as part of a dedicated multidisciplinary team.
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- NHS Section -->
-  <section id="nhs">
-    <div class="section-wrapper">
-      <div class="reveal">
-        <p class="section-tag">Where I Work</p>
-        <h2 class="section-title">NHS Service</h2>
-        <div class="section-line"></div>
-      </div>
+  <hr class="divider" />
 
-      <div class="nhs-hero reveal">
-        <div class="nhs-logo-box">
-          <div class="nhs-logo">NHS</div>
-          <div class="nhs-subtitle">National Health Service<br>United Kingdom</div>
+  <!-- NHS -->
+  <section class="section" id="nhs">
+    <div class="wrap">
+      <p class="section-label reveal">Organisation</p>
+      <h2 class="section-heading reveal reveal-delay-1">Working within<br>the NHS.</h2>
 
-          <div style="margin-top: 2rem; display: flex; flex-direction: column; gap: 0.75rem;">
-            <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(65,182,230,0.2); border-radius: 12px; padding: 1rem; text-align: left;">
-              <div style="font-size: 0.7rem; color: var(--nhs-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.25rem;">Location</div>
-              <div style="font-size: 0.9rem;">📍 Hemel Hempstead, Hertfordshire</div>
-            </div>
-            <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(65,182,230,0.2); border-radius: 12px; padding: 1rem; text-align: left;">
-              <div style="font-size: 0.7rem; color: var(--nhs-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.25rem;">Speciality</div>
-              <div style="font-size: 0.9rem;">🧠 Mental Health Nursing</div>
+      <div class="nhs-panel reveal reveal-delay-2">
+        <div class="nhs-inner">
+          <div class="nhs-left">
+            <div class="nhs-badge">NHS</div>
+            <div class="nhs-meta-list">
+              <div class="nhs-meta">
+                <div class="nhs-meta-key">Organisation</div>
+                <div class="nhs-meta-val">National Health Service</div>
+              </div>
+              <div class="nhs-meta">
+                <div class="nhs-meta-key">Location</div>
+                <div class="nhs-meta-val">Hemel Hempstead, Hertfordshire</div>
+              </div>
+              <div class="nhs-meta">
+                <div class="nhs-meta-key">Speciality</div>
+                <div class="nhs-meta-val">Mental Health Nursing</div>
+              </div>
+              <div class="nhs-meta">
+                <div class="nhs-meta-key">Registration</div>
+                <div class="nhs-meta-val">NMC — Registered (RMN)</div>
+              </div>
+              <div class="nhs-meta">
+                <div class="nhs-meta-key">Setting</div>
+                <div class="nhs-meta-val">Specialist MH Services</div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="nhs-info">
-          <h3>Committed to Caring</h3>
-          <p>
-            As a Mental Health Nurse within the NHS, I work at the heart of the UK's
-            most trusted healthcare system. My daily commitment is to provide
-            compassionate, evidence-based mental health care that genuinely makes a
-            difference in people's lives.
-          </p>
-          <p>
-            I work closely with consultant psychiatrists, psychologists, social workers,
-            and occupational therapists as part of a multidisciplinary team — ensuring
-            every patient receives holistic, person-centred support tailored to their
-            unique journey to recovery.
-          </p>
-
-          <div class="nhs-values">
-            <span class="value-chip">Person-Centred Care</span>
-            <span class="value-chip">Evidence-Based Practice</span>
-            <span class="value-chip">Safeguarding</span>
-            <span class="value-chip">Mental Wellbeing</span>
-            <span class="value-chip">MDT Collaboration</span>
-            <span class="value-chip">Recovery Model</span>
-            <span class="value-chip">Inclusion</span>
-            <span class="value-chip">Compassion</span>
+          <div class="nhs-right">
+            <h3>Committed to caring,<br>every single day.</h3>
+            <p>
+              As a Mental Health Nurse within the NHS, I work at the heart of one of the world's
+              most respected healthcare systems. The role demands both clinical expertise and an
+              unwavering commitment to human dignity — something I take seriously every shift.
+            </p>
+            <p>
+              Collaborating daily with consultant psychiatrists, psychologists, social workers,
+              and occupational therapists, I help design and deliver holistic care packages
+              that support patients along their individual recovery journeys.
+            </p>
+            <p>
+              My practice is rooted in the NHS values — respect, compassion, and the belief
+              that everyone deserves access to high-quality mental health support regardless
+              of background or circumstance.
+            </p>
+            <div class="tag-cloud">
+              <span class="tag">Person-Centred</span>
+              <span class="tag">Evidence-Based</span>
+              <span class="tag">Safeguarding</span>
+              <span class="tag">MDT Collaboration</span>
+              <span class="tag">Recovery Model</span>
+              <span class="tag">Mental Wellbeing</span>
+              <span class="tag">Inclusion</span>
+              <span class="tag">Compassion</span>
+              <span class="tag">Trauma-Informed</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+
+  <hr class="divider" />
 
   <!-- Contact -->
-  <section id="contact">
-    <div class="section-wrapper">
-      <div class="reveal" style="text-align: center;">
-        <p class="section-tag">Say Hello</p>
-        <h2 class="section-title">Get in Touch</h2>
-        <div class="section-line" style="margin: 0 auto 3rem;"></div>
-      </div>
+  <section class="section" id="contact">
+    <div class="wrap">
+      <p class="section-label reveal">Contact</p>
+      <h2 class="section-heading reveal reveal-delay-1">Get in touch.</h2>
 
-      <div class="contact-grid">
-        <div class="contact-card reveal">
-          <div class="contact-icon">📍</div>
-          <div class="contact-label">Location</div>
-          <div class="contact-value">Hemel Hempstead<br>Hertfordshire, UK</div>
+      <div class="contact-layout">
+        <div class="contact-cards reveal reveal-delay-2">
+          <div class="contact-row">
+            <div class="contact-icon-box">📍</div>
+            <div>
+              <div class="contact-row-label">Location</div>
+              <div class="contact-row-value">Hemel Hempstead, Hertfordshire, UK</div>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-icon-box">🏥</div>
+            <div>
+              <div class="contact-row-label">Employer</div>
+              <div class="contact-row-value">National Health Service (NHS)</div>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-icon-box">🎓</div>
+            <div>
+              <div class="contact-row-label">Education</div>
+              <div class="contact-row-value">West Herts College, Hertfordshire</div>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-icon-box">🧠</div>
+            <div>
+              <div class="contact-row-label">Speciality</div>
+              <div class="contact-row-value">Mental Health Nursing (RMN)</div>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-icon-box">✅</div>
+            <div>
+              <div class="contact-row-label">Registration</div>
+              <div class="contact-row-value">NMC Registered — UK</div>
+            </div>
+          </div>
         </div>
-        <div class="contact-card reveal">
-          <div class="contact-icon">🏥</div>
-          <div class="contact-label">Employer</div>
-          <div class="contact-value">National Health Service<br>NHS United Kingdom</div>
-        </div>
-        <div class="contact-card reveal">
-          <div class="contact-icon">🎓</div>
-          <div class="contact-label">Education</div>
-          <div class="contact-value">West Herts College<br>Hertfordshire</div>
-        </div>
-        <div class="contact-card reveal">
-          <div class="contact-icon">🧠</div>
-          <div class="contact-label">Speciality</div>
-          <div class="contact-value">Mental Health<br>Nursing (RMN)</div>
-        </div>
-      </div>
 
-      <div class="reveal" style="text-align: center; margin-top: 2rem;">
-        <p style="color: rgba(255,255,255,0.5); font-size: 0.9rem; max-width: 500px; margin: 0 auto;">
-          Dedicated to mental health advocacy, compassionate care, and making a positive impact
-          in the Hertfordshire community and beyond.
-        </p>
+        <div class="contact-quote reveal reveal-delay-3">
+          <p>
+            "Mental health is not a destination, but a process. It's about how you drive,
+            not where you're going."
+          </p>
+          <cite>— Noam Shpancer · A guiding principle in my practice</cite>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
   <footer>
-    <p>© 2024 <span>Kabita Phuyal</span> · Mental Health Nurse · NHS UK · Hemel Hempstead</p>
-    <p style="margin-top: 0.5rem; font-size: 0.75rem; color: rgba(255,255,255,0.2);">
-      Caring for minds · Changing lives · Making a difference
-    </p>
+    <p>© 2024 <span>Kabita Phuyal</span> · Mental Health Nurse · NHS United Kingdom</p>
+    <p class="footer-right">Caring for minds · Changing lives</p>
   </footer>
 
   <script>
-    // ── Particle System ──
-    const canvas = document.getElementById('particles-canvas');
-    const ctx = canvas.getContext('2d');
-
-    let W = canvas.width = window.innerWidth;
-    let H = canvas.height = window.innerHeight;
-
-    window.addEventListener('resize', () => {
-      W = canvas.width = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-    });
-
-    const PARTICLE_COUNT = 80;
-    const particles = [];
-
-    const COLORS = ['rgba(0,48,135,', 'rgba(65,182,230,', 'rgba(0,150,57,', 'rgba(255,255,255,'];
-
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push({
-        x: Math.random() * W,
-        y: Math.random() * H,
-        r: Math.random() * 2.5 + 0.5,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        color: COLORS[Math.floor(Math.random() * COLORS.length)],
-        alpha: Math.random() * 0.5 + 0.1,
-      });
-    }
-
-    function drawParticles() {
-      ctx.clearRect(0, 0, W, H);
-
-      // Draw connections
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(65,182,230,${0.06 * (1 - dist / 120)})`;
-            ctx.lineWidth = 0.5;
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
-          }
-        }
-      }
-
-      // Draw particles
-      particles.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = p.color + p.alpha + ')';
-        ctx.fill();
-
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.x < 0 || p.x > W) p.vx *= -1;
-        if (p.y < 0 || p.y > H) p.vy *= -1;
-      });
-
-      requestAnimationFrame(drawParticles);
-    }
-
-    drawParticles();
-
-    // ── ECG Line Animation ──
-    function generateECG() {
-      const points = [];
-      const width = 1200;
-      const midY = 40;
+    // ECG path generation
+    (function() {
+      const path = document.getElementById('ecg-path');
+      const pts = [];
+      const w = 1200, mid = 30;
       let x = 0;
-
-      while (x < width) {
-        // Flat line
-        for (let i = 0; i < 30 && x < width; i++, x += 4) {
-          points.push(`${x},${midY}`);
-        }
-        // P wave
-        for (let i = 0; i < 10 && x < width; i++, x += 3) {
-          points.push(`${x},${midY - Math.sin(i / 10 * Math.PI) * 8}`);
-        }
-        // PR interval
-        for (let i = 0; i < 8 && x < width; i++, x += 3) {
-          points.push(`${x},${midY}`);
-        }
-        // QRS complex
-        points.push(`${x},${midY + 5}`); x += 3;
-        points.push(`${x},${midY - 35}`); x += 3;
-        points.push(`${x},${midY + 10}`); x += 3;
-        points.push(`${x},${midY}`); x += 3;
-        // ST segment
-        for (let i = 0; i < 8 && x < width; i++, x += 3) {
-          points.push(`${x},${midY}`);
-        }
-        // T wave
-        for (let i = 0; i < 14 && x < width; i++, x += 3) {
-          points.push(`${x},${midY - Math.sin(i / 14 * Math.PI) * 12}`);
-        }
+      while (x < w) {
+        for (let i = 0; i < 32 && x < w; i++, x += 3) pts.push(`${x},${mid}`);
+        for (let i = 0; i < 8 && x < w; i++, x += 3) pts.push(`${x},${mid - Math.sin(i/8*Math.PI)*6}`);
+        for (let i = 0; i < 6 && x < w; i++, x += 3) pts.push(`${x},${mid}`);
+        pts.push(`${x},${mid+4}`); x+=2;
+        pts.push(`${x},${mid-28}`); x+=2;
+        pts.push(`${x},${mid+8}`); x+=2;
+        pts.push(`${x},${mid}`); x+=2;
+        for (let i = 0; i < 6 && x < w; i++, x += 3) pts.push(`${x},${mid}`);
+        for (let i = 0; i < 12 && x < w; i++, x += 3) pts.push(`${x},${mid - Math.sin(i/12*Math.PI)*9}`);
       }
+      path.setAttribute('points', pts.join(' '));
+      const len = 3200;
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = len;
+      let off = 0;
+      (function tick() {
+        off -= 2;
+        if (off < -len) off = 0;
+        path.style.strokeDashoffset = off;
+        requestAnimationFrame(tick);
+      })();
+    })();
 
-      return points.join(' ');
-    }
+    // Scroll reveal
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-    const ecgPath = document.getElementById('ecg-path');
-    ecgPath.setAttribute('points', generateECG());
-
-    // Animate ECG stroke
-    let ecgOffset = 0;
-    const ecgLen = 3000;
-    ecgPath.style.strokeDasharray = ecgLen;
-    ecgPath.style.strokeDashoffset = ecgLen;
-
-    function animateECG() {
-      ecgOffset -= 3;
-      if (ecgOffset < -ecgLen) ecgOffset = 0;
-      ecgPath.style.strokeDashoffset = ecgOffset;
-      requestAnimationFrame(animateECG);
-    }
-    animateECG();
-
-    // ── Scroll Reveal ──
-    const reveals = document.querySelectorAll('.reveal');
-    const timelineItems = document.querySelectorAll('.timeline-item');
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
+    // Skill meter fill on scroll
+    const mobs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const fill = e.target.querySelector('.skill-meter-fill');
+          if (fill) fill.style.width = fill.dataset.w + '%';
         }
       });
-    }, { threshold: 0.15 });
+    }, { threshold: 0.4 });
+    document.querySelectorAll('.skill-item').forEach(el => mobs.observe(el));
 
-    reveals.forEach(el => observer.observe(el));
-    timelineItems.forEach(el => observer.observe(el));
-
-    // ── Skill Bar Animation ──
-    const skillBars = document.querySelectorAll('.skill-bar-fill');
-    const barObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const width = entry.target.getAttribute('data-width');
-          entry.target.style.width = width + '%';
-        }
-      });
-    }, { threshold: 0.5 });
-
-    skillBars.forEach(bar => barObserver.observe(bar));
-
-    // ── Nav scroll effect ──
+    // Nav background on scroll
+    const nav = document.querySelector('nav');
     window.addEventListener('scroll', () => {
-      const nav = document.getElementById('navbar');
-      if (window.scrollY > 50) {
-        nav.style.background = 'rgba(0,32,91,0.95)';
-        nav.style.boxShadow = '0 4px 30px rgba(0,0,0,0.3)';
-      } else {
-        nav.style.background = 'rgba(0,32,91,0.85)';
-        nav.style.boxShadow = 'none';
-      }
-    });
+      nav.style.setProperty('--nav-opacity', window.scrollY > 20 ? '0.92' : '0.7');
+    }, { passive: true });
   </script>
 </body>
 </html>
